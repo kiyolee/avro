@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -57,15 +57,17 @@ libage=$(($libavro_binary_age - $libavro_interface_age))
 
 if test "$1" = "project"; then
   project_ver="undef"
-  version_file="VERSION.txt"
-  if test -f $version_file; then
-    project_ver=$(cat $version_file)
-  else
-    version_file="../../share/VERSION.txt"
+  for version_file in \
+    "VERSION.txt" \
+    "../../share/VERSION.txt" \
+    "`dirname \"$0\"`/VERSION.txt" \
+    "`dirname \"$0\"`/../../share/VERSION.txt" \
+    ; do
     if test -f $version_file; then
       project_ver=$(cat $version_file)
+      #break;
     fi
-  fi
+  done
   printf "%s" $project_ver
 elif test "$1" = "libtool"; then
   # useful for the -version-info flag for libtool
